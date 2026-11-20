@@ -2,6 +2,7 @@ package com.company.booking.service;
 
 import com.company.booking.model.dto.CreateUserRq;
 import com.company.booking.model.dto.FullUserRs;
+import com.company.booking.model.dto.UpdateUser;
 import com.company.booking.model.dto.UserRs;
 import com.company.booking.model.entity.User;
 import com.company.booking.repository.UserRepository;
@@ -38,5 +39,48 @@ public class UserService {
         }
 
         throw new RuntimeException("User not found!");
+    }
+
+    @Transactional
+    public UserRs updateUser (Long id, String email, UpdateUser dto) {
+        String updateName = normalize(dto.getName());
+        String updateEmail = normalize(dto.getEmail());
+
+        User user = findUser(id, email);
+
+        if (updateName != null) {
+            user.setName(updateName);
+        }
+
+        if (updateEmail != null && !updateEmail.equals(user.getEmail())) {
+            if (userRepository.existsByEmail(updateEmail)) {
+                throw new RuntimeException("Email already exists");
+            }
+
+            user.setEmail(updateEmail);
+        }
+
+        User savedUser = userRepository.save(user);
+        return new UserRs(savedUser.getId(), savedUser.getName());
+    }
+
+    private User findUser (Long id, String email) {
+        if (id != null) {
+            return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found!"));
+        }
+
+        if (email != null) {
+            return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found!"));
+        }
+
+        throw new  RuntimeException("Name and/or Email are required!");
+    }
+
+    private String normalize (String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        return value.trim();
     }
 }

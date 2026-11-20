@@ -2,6 +2,7 @@ package com.company.booking.controller;
 
 import com.company.booking.model.dto.CreateUserRq;
 import com.company.booking.model.dto.FullUserRs;
+import com.company.booking.model.dto.UpdateUser;
 import com.company.booking.model.dto.UserRs;
 import com.company.booking.service.UserService;
 import jakarta.validation.Valid;
@@ -25,6 +26,12 @@ public class UserApiController {
     @GetMapping({"/{id}", "/{email}"})
     public ResponseEntity<FullUserRs> getUser(@PathVariable Long id, @PathVariable String email) {
         FullUserRs user = userService.getUser(id, email);
+        return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping({"/{id}", "/{email}"})
+    public ResponseEntity<UserRs> updateUser (@PathVariable Long id, @PathVariable String email, @RequestBody UpdateUser updateUser) {
+        UserRs user = userService.updateUser(id, email, updateUser);
         return ResponseEntity.ok(user);
     }
 }
