@@ -1,0 +1,24 @@
+package com.company.booking.controller;
+
+import com.company.booking.model.dto.CreateUserRq;
+import com.company.booking.model.dto.FullUserRs;
+import com.company.booking.model.dto.UserRs;
+import com.company.booking.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/v0/users")
+public class UserApiController {
+    private final UserService userService;
+
+    @PostMapping
+    public ResponseEntity<UserRs> addUser(@RequestBody @Valid CreateUserRq userRq) {
+        UserRs user = userService.create(userRq);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+}

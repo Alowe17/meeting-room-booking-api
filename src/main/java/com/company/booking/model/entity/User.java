@@ -26,4 +26,11 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
     private Instant createdAt;
+
+    public User (String name, String email) {
+        this.name = name;
+        this.email = email;
+        this.role = Role.USER;
+        this.createdAt = Instant.now();
+    }
 }
