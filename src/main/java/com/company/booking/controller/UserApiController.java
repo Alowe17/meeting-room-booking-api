@@ -21,4 +21,10 @@ public class UserApiController {
         UserRs user = userService.create(userRq);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
+
+    @GetMapping({"/{id}", "/{email}"})
+    public ResponseEntity<FullUserRs> getUser(@PathVariable Long id, @PathVariable String email) {
+        FullUserRs user = userService.getUser(id, email);
+        return ResponseEntity.ok(user);
+    }
 }
